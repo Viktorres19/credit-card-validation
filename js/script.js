@@ -1,29 +1,32 @@
-document.querySelector('.card-number-input').oninput = () =>{
-    document.querySelector('.card-number-box').innerText = document.querySelector('.card-number-input').value;
+const cardNumberInput = document.querySelector('.card-number-input'),
+    cardNumberBox = document.querySelector('.card-number-box'),
+    cardHolderInput = document.querySelector('.card-holder-input'),
+    cardHolderName = document.querySelector('.card-holder-name'),
+    expMonth = document.querySelector('.exp-month'),
+    monthInput = document.querySelector('.month-input'),
+    yearInput = document.querySelector('.year-input'),
+    expYear = document.querySelector('.exp-year'),
+    cvvInput = document.querySelector('.cvv-input'),
+    front = document.querySelector('.front'),
+    back = document.querySelector('.back'),
+    cvvBox = document.querySelector('.cvv-box');
+
+cardNumberInput.oninput = () => cardNumberBox.innerText = cardNumberInput.value
+
+cardHolderInput.oninput = () => cardHolderName.innerText = cardHolderInput.value
+
+monthInput.oninput = () => expMonth.innerText = monthInput.value
+
+yearInput.oninput = () => expYear.innerText = yearInput.value
+
+cvvInput.onmouseenter = () => {
+    front.style.transform = 'perspective(1000px) rotateY(-180deg)'
+    back.style.transform = 'perspective(1000px) rotateY(0deg)'
 }
 
-document.querySelector('.card-holder-input').oninput = () =>{
-    document.querySelector('.card-holder-name').innerText = document.querySelector('.card-holder-input').value;
+cvvInput.onmouseleave = () => {
+    front.style.transform = 'perspective(1000px) rotateY(0deg)'
+    back.style.transform = 'perspective(1000px) rotateY(180deg)'
 }
 
-document.querySelector('.month-input').oninput = () =>{
-    document.querySelector('.exp-month').innerText = document.querySelector('.month-input').value;
-}
-
-document.querySelector('.year-input').oninput = () =>{
-    document.querySelector('.exp-year').innerText = document.querySelector('.year-input').value;
-}
-
-document.querySelector('.cvv-input').onmouseenter = () =>{
-    document.querySelector('.front').style.transform = 'perspective(1000px) rotateY(-180deg)';
-    document.querySelector('.back').style.transform = 'perspective(1000px) rotateY(0deg)';
-}
-
-document.querySelector('.cvv-input').onmouseleave = () =>{
-    document.querySelector('.front').style.transform = 'perspective(1000px) rotateY(0deg)';
-    document.querySelector('.back').style.transform = 'perspective(1000px) rotateY(180deg)';
-}
-
-document.querySelector('.cvv-input').oninput = () =>{
-    document.querySelector('.cvv-box').innerText = document.querySelector('.cvv-input').value;
-}
+cvvInput.oninput = () => cvvBox.innerText = cvvInput.value
