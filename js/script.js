@@ -1,4 +1,5 @@
-const cardNumberInput = document.querySelector('.card-number-input'),
+const form = document.querySelector('.form'),
+    cardNumberInput = document.querySelector('.card-number-input'),
     cardNumberBox = document.querySelector('.card-number-box'),
     cardHolderInput = document.querySelector('.card-holder-input'),
     cardHolderName = document.querySelector('.card-holder-name'),
@@ -9,7 +10,9 @@ const cardNumberInput = document.querySelector('.card-number-input'),
     cvvInput = document.querySelector('.cvv-input'),
     front = document.querySelector('.front'),
     back = document.querySelector('.back'),
-    cvvBox = document.querySelector('.cvv-box');
+    cvvBox = document.querySelector('.cvv-box'),
+    currentMonth = new Date().getMonth(),
+    currentYear = new Date().getFullYear();
 
 cardNumberInput.oninput = () => cardNumberBox.innerText = cardNumberInput.value
 
@@ -30,3 +33,41 @@ cvvInput.onmouseleave = () => {
 }
 
 cvvInput.oninput = () => cvvBox.innerText = cvvInput.value
+
+
+/* function checkCard (currentMonth, currentYear, monthInput, yearInput) {
+    console.log(currentMonth)
+    console.log(typeof currentMonth)
+    console.log(currentYear)
+    console.log(typeof currentYear)
+    console.log(monthInput.value)
+    console.log(typeof +monthInput.value)
+    console.log(yearInput.value)
+    console.log(typeof +yearInput.value)
+} */
+
+function checkMonth (currentMonth, monthInput) {
+    console.log(currentMonth)
+    console.log(monthInput.value)
+}
+
+function checkYear (currentYear, yearInput) {
+    console.log(currentYear)
+    console.log(yearInput.value)
+}
+
+function checkNumber (cardNumberInput) {
+    console.log(cardNumberInput.value)
+}
+
+function checkCvv (cvvInput) {
+    console.log(cvvInput.value)
+}
+
+form.onsubmit = function (e) {
+    e.preventDefault()
+    checkMonth (currentMonth, monthInput)
+    checkYear (currentYear, yearInput)
+    checkNumber (cardNumberInput)
+    checkCvv (cvvInput)
+}
