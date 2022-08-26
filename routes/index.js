@@ -7,7 +7,8 @@ router.post('/', function(req, res) {
     cardHolderName: '',
     cardNumberBox: '',
     expMonth: '',
-    expYear: ''
+    expYear: '',
+    notValid: ''
   }
   let data = req.body
 
@@ -26,6 +27,18 @@ router.post('/', function(req, res) {
   }
   if (data.expYear.length < 2) {
     error.expYear = 'This year looks wrong'
+  }
+
+  let ch = 0;
+  const num = String(data.cardNumberBox).replace(/\D/g, '');
+  const isOdd = num.length % 2 !== 0;
+  if ('' === num) return false;
+  for (let i = 0; i < num.length; i++) {
+    let n = parseInt(num[i], 10);
+    ch += (isOdd | 0) === (i % 2) && 9 < (n *= 2) ? (n - 9) : n;
+  }
+  if (0 !== (ch % 10)) {
+    error.notValid = 'Number of your card is not valid, please check'
   }
 
   res.json({error})

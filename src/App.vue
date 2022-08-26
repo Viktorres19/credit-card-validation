@@ -9,7 +9,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="124.894" height="35.889" viewBox="0 0 33.045 9.496"><path style="display:inline;opacity:0;stroke-width:1.78802;stroke-opacity:1" d="M-.168 7.515h31.257v7.708H-.168z" transform="translate(1.062 -6.62)"/><text xml:space="preserve" style="font-size:9.525px;line-height:1.25;font-family:Ebrima;-inkscape-font-specification:Ebrima;stroke-width:.264583" x="-.499" y="9.143"><tspan x="-.499" y="9.143" style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:12.7001px;font-family:Rubik;-inkscape-font-specification:Rubik;fill:#fff;stroke-width:.264583">CARD</tspan></text></svg>
         </div>
         <div class="card-number-box">
-          <div v-if="successValidation" class="number-box__error">{{ successValidation }}</div>
+          <div v-if="successValidation" class="number-box__success">{{ successValidation }}</div>
+          <div v-if="error.notValid" class="number-box__error">{{ error.notValid }}</div>
           <div>{{ !data.cardNumberBox ? '################' : data.cardNumberBox }}</div>
         </div>
         <div class="flexbox">
@@ -98,7 +99,8 @@ export default {
         cardHolderName: '',
         cardNumberBox: '',
         expMonth: '',
-        expYear: ''
+        expYear: '',
+        notValid: ''
       }
     }
   },
@@ -195,11 +197,11 @@ export default {
         const result = await res.json()
         if (Object.values(result.error).filter(f=>f).length === 0) {
           this.successValidation = 'Success'
-        } else {
-          this.error = result.error
+        } else if (Object.values(result.error).filter(f=>f).length !== 0) {
+          this.error.notValid = 'Number of your card is not valid, please check'
+          console.log(this.error.notValid)
         }
       }
-
     }
   }
 }
@@ -395,13 +397,21 @@ export default {
   color:#fff;
 }
 
-.front .number-box__error {
+.front .number-box__success, .front .number-box__error {
   position: absolute;
+  z-index: 3;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  color: lightgreen;
   font-size: 16px;
+}
+
+.front .number-box__success {
+  color: lightgreen;
+}
+
+.front .number-box__error {
+  color: firebrick;
 }
 
 .front .flexbox{
