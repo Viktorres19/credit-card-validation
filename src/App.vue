@@ -9,7 +9,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="124.894" height="35.889" viewBox="0 0 33.045 9.496"><path style="display:inline;opacity:0;stroke-width:1.78802;stroke-opacity:1" d="M-.168 7.515h31.257v7.708H-.168z" transform="translate(1.062 -6.62)"/><text xml:space="preserve" style="font-size:9.525px;line-height:1.25;font-family:Ebrima;-inkscape-font-specification:Ebrima;stroke-width:.264583" x="-.499" y="9.143"><tspan x="-.499" y="9.143" style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:12.7001px;font-family:Rubik;-inkscape-font-specification:Rubik;fill:#fff;stroke-width:.264583">CARD</tspan></text></svg>
         </div>
         <div class="card-number-box">
-          {{ !data.cardNumberBox ? '################' : data.cardNumberBox }}
+          <div v-if="successValidation" class="number-box__error">{{ successValidation }}</div>
+          <div>{{ !data.cardNumberBox ? '################' : data.cardNumberBox }}</div>
         </div>
         <div class="flexbox">
           <div class="box">
@@ -91,6 +92,7 @@ export default {
       },
       isRotated: false,
       flag: "@/assets/usa-flag.jpg",
+      successValidation: '',
       error: {
         cvvBox: '',
         cardHolderName: '',
@@ -120,7 +122,6 @@ export default {
       const dateYear = new Date().getFullYear() - 2000
       let year = event.target.value
       year = year.replace(/\D/g, '');
-      console.log(year*1)
       if (year < dateYear && year.length === 2) {
         year = dateYear
       } else if (year.length > 2) {
@@ -159,7 +160,7 @@ export default {
         || !AE && this.data.cardNumberBox.length > 19 || this.data.cardNumberBox.length < 16) {
         this.error.cardNumberBox = 'This field is filled incorrect'
       }
-      if (AE && this.data.cvvBox.length !== 4 || this.data.cvvBox.length !== 3) {
+      if (AE && this.data.cvvBox.length !== 4 || !AE && this.data.cvvBox.length !== 3) {
         this.error.cvvBox = 'This CVV is filled incorrect'
       }
       if (this.data.expMonth.length < 2 || this.data.expMonth === 1) {
@@ -170,10 +171,35 @@ export default {
         if (this.data.expYear.length < 2) {
         this.error.expYear = 'This year looks wrong'
       }
-      console.log(this.error)
     },
-    submit () {
+
+    async submit () {
+      this.error = {
+        cvvBox: '',
+        cardHolderName: '',
+        cardNumberBox: '',
+        expMonth: '',
+        expYear: ''
+      }
       this.checkValidation ()
+
+      if (Object.values(this.error).filter(f=>f).length === 0) {
+        const res = await fetch('api', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(this.data)
+        })
+
+        const result = await res.json()
+        if (Object.values(result.error).filter(f=>f).length === 0) {
+          this.successValidation = 'Success'
+        } else {
+          this.error = result.error
+        }
+      }
+
     }
   }
 }
@@ -363,9 +389,19 @@ export default {
 }
 
 .front .card-number-box{
+  position: relative;
   padding:30px 0;
   font-size: 22px;
   color:#fff;
+}
+
+.front .number-box__error {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  color: lightgreen;
+  font-size: 16px;
 }
 
 .front .flexbox{
